@@ -5,6 +5,21 @@ import json
 from retinaface import RetinaFace
 
 import sys
+from flask import Flask, request, jsonify
+
+app = Flask(__name__)
+
+@app.route('/process', methods=['GET'])
+def process_get():
+    image_url = request.args.get('url')
+    if image_url:
+        return jsonify({"status": "Image URL received", "url": image_url})
+    else:
+        return jsonify({"error": "No image URL provided"}), 400
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=5000)
+
 
 
 
@@ -17,7 +32,7 @@ import sys
 # RetinaFace version: 0.0.17
 
 # Note: json does not have a version attribute
-print(f"JSON version: Not available")
+# print(f"JSON version: Not available")
 
 
 '''
