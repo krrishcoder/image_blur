@@ -35,7 +35,7 @@ if __name__ == '__main__':
 # print(f"JSON version: Not available")
 
 
-'''
+
 img = cv.imread("./people-1979261_640.jpg")
 
 faces = RetinaFace.detect_faces("./people-1979261_640.jpg", threshold=0.5)
@@ -44,34 +44,34 @@ faces = RetinaFace.detect_faces("./people-1979261_640.jpg", threshold=0.5)
 
 # drawing geomteric shapes
 # create a black image
-#img = np.zeros((512,512,3), np.uint8)
+img = np.zeros((512,512,3), np.uint8)
 
 
 
 # draw a diagonal blue line with thikness of 5 px
 
-# cv.line(img, pt1=(0,0), pt2=(511,511), color=(255,0,0),thickness=5)
-# cv.rectangle(img,pt1=(10,10),pt2=(100,100),color=(255,0,0),thickness=3)
+cv.line(img, pt1=(0,0), pt2=(511,511), color=(255,0,0),thickness=5)
+cv.rectangle(img,pt1=(10,10),pt2=(100,100),color=(255,0,0),thickness=3)
 
-# cv.circle(img,center=(100,100), radius=45,color=(0,255,0),thickness=5)
-# cv.ellipse(img, (256,256),(100,50),0,0,330,255,-1)
+cv.circle(img,center=(100,100), radius=45,color=(0,255,0),thickness=5)
+cv.ellipse(img, (256,256),(100,50),0,0,330,255,-1)
 
-# cv.putText(img, 'open cv', (10,500), cv.FONT_HERSHEY_COMPLEX, 4, (255,0,0),2,cv.LINE_AA)
+cv.putText(img, 'open cv', (10,500), cv.FONT_HERSHEY_COMPLEX, 4, (255,0,0),2,cv.LINE_AA)
 
 
 # # mouse callback function whihc is executed when mouse click takes place
-# events = [i for i in dir(cv) if 'EVENT' in i]
-# print(events)
+events = [i for i in dir(cv) if 'EVENT' in i]
+print(events)
 
 # # mouse callback function
-# def draw_circle(event, x,y , flags, param):
-#     if event == cv.EVENT_MOUSEMOVE:
-#         cv.circle(img,(x,y),20,(255,0,0), -1)
-#         print("clicked")
+def draw_circle(event, x,y , flags, param):
+    if event == cv.EVENT_MOUSEMOVE:
+        cv.circle(img,(x,y),20,(255,0,0), -1)
+        print("clicked")
 
 
-# cv.namedWindow("image")
-# cv.setMouseCallback('image', draw_circle)
+cv.namedWindow("image")
+cv.setMouseCallback('image', draw_circle)
 
 
 
@@ -109,4 +109,3 @@ if k == ord("s"):
 cv.destroyAllWindows()
 
 
-'''
