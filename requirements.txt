@@ -1,0 +1,9 @@
+fastapi==0.111.0
+uvicorn==0.29.0
+python-multipart==0.0.9
+opencv-python==4.9.0.80
+numpy==1.26.4
+deepface==0.0.83
+retina-face==0.0.13
+tensorflow==2.15.0
+keras==2.15.0
