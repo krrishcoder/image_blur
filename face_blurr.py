@@ -4,12 +4,11 @@ from deepface import DeepFace
 from retinaface import RetinaFace
 from fastapi import FastAPI, UploadFile, File
 from fastapi.responses import JSONResponse
-import os
 from fastapi.middleware.cors import CORSMiddleware
+import base64
 
 app = FastAPI()
 
-# Allow CORS for all origins (you can restrict this in production)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -23,27 +22,28 @@ async def process_post(file: UploadFile = File(...)):
     if not file:
         return JSONResponse(content={"error": "No file part"}, status_code=400)
 
-    # Save the uploaded file
-    file_path = os.path.join("uploads", file.filename)
-    with open(file_path, "wb") as f:
-        f.write(await file.read())
+    # Read uploaded image into memory as bytes
+    contents = await file.read()
+    nparr = np.frombuffer(contents, np.uint8)
+    img = cv.imdecode(nparr, cv.IMREAD_COLOR)
 
-    # Process the image
-    img = cv.imread(file_path)
-    faces = RetinaFace.detect_faces(file_path, threshold=0.5)
+    if img is None:
+        return JSONResponse(content={"error": "Could not decode image"}, status_code=400)
+
+    # Detect faces
+    faces = RetinaFace.detect_faces(img_path=img, threshold=0.5)
 
     for key, value in faces.items():
         x1, y1, x2, y2 = value["facial_area"]
         roi = img[y1:y2, x1:x2]
         blurred_region = cv.GaussianBlur(roi, (15, 15), 0)
-        img[y1:y2, x1:x2] = blurred_region 
+        img[y1:y2, x1:x2] = blurred_region
 
-    # Save the processed image
-    output_path = os.path.join("uploads", "blurred_" + file.filename)
-    cv.imwrite(output_path, img)
+    # Encode image to memory as JPEG and then base64
+    _, buffer = cv.imencode('.jpg', img)
+    encoded_image = base64.b64encode(buffer).decode('utf-8')
 
-    return {"status": "Image processed", "output_url": output_path}
-
-if __name__ == '__main__':
-    import uvicorn
-    uvicorn.run(app, host='0.0.0.0', port=5000)
+    return {
+        "status": "Image processed",
+        "image_base64": f"data:image/jpeg;base64,{encoded_image}"
+    }
